@@ -17,6 +17,22 @@
  * validating existing user
  * 
  * monthly analysis
+ * git push:::::::::::::::::::::::
+step 1:create a repository in git
+step 2: install git base
+step 3: copy the repository link
+step 4: create a git base file 
+          using commad is "git clone repository link"
+step 5: add the program files into  the git base file
+step 6:click the file path bar and open "cmd"
+step 7:type cmd code is "code ."
+step 8:then it open the vs code 
+step 9: open git terminal type
+{
+1.git add .
+2.git commit -m "update operation name"
+3.git push 
+}
  */
 
 /**
