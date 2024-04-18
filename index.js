@@ -36,7 +36,7 @@ step 9: open git terminal type
  */
 
 /**
- * Database - Expense Tracker
+ * Database - Expense Trackergit
  * Collections
  *      i) ExpenseDetails
  *          - amount (number)
@@ -61,7 +61,7 @@ async function connectToDb() {
     try {
         await mongoose.connect('mongodb+srv://vasanth_node:vasanthakumar@cluster0.zoimsbd.mongodb.net/demo?retryWrites=true&w=majority&appName=Cluster0')
         console.log("DB connection established :)")
-        const port=process.env.PORT || 8000
+        const port=process.env.PORT || 10000
         app.listen(port, function() {
             console.log(`Listening on ${port}...`)
         })
@@ -92,25 +92,25 @@ app.post('/add-expense', async function(request, response) {
     }
 })
 
-app.post('/add-user', async function(request, response) {
-    try {
-        await User.create({
-            "emailID": request.body.email,
-            "password": request.body.password,
-            "user_name": request.body.name
-        })
-        response.status(201).json({
-            "status" : "success",
-            "message" : "entry successfully added"
-        })
-    } catch(error) {
-        response.status(500).json({
-            "status" : "failure",
-            "message" : "entry not created",
-            "error" : error
-        })
-    }
-})
+// app.post('/add-user', async function(request, response) {
+//     try {
+//         await User.create({
+//             "emailID": request.body.email,
+//             "password": request.body.password,
+//             "user_name": request.body.name
+//         })
+//         response.status(201).json({
+//             "status" : "success",
+//             "message" : "entry successfully added"
+//         })
+//     } catch(error) {
+//         response.status(500).json({
+//             "status" : "failure",
+//             "message" : "entry not created",
+//             "error" : error
+//         })
+//     }
+// })
 
 
 app.get('/get-items',async function(req,res){
