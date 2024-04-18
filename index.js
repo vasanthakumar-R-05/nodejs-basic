@@ -172,14 +172,21 @@ app.post('/add-user',async function(req,res){
         const user=await User.find({"emailID":req.body.email});
         if(user.length===0)
         {
-            User.create({
+            const user=await User.create({
              "emailID":req.body.email,
             "password":req.body.pass,
             "user_name":req.body.uname
             })
-            res.status(200).json({
+            const userDetails = {
+                "userName": user.userName,
+                "emailId": user.emailID,
+                "userID": user._id.toString()
+            }
+            const accessToken = generateToken(userDetails)
+            res.status(201).json({
             "status":"success",
-            "message":"new user created"
+            "message":"new user created",
+            "accesstoken":accessToken
             })
         }
         else{
@@ -212,7 +219,7 @@ app.post('/valid-user',async function(req,res){
             const userDetails = {
                 "userName": user[0].userName,
                 "emailId": user[0].emailID,
-                "userID": user[0]._id
+                "userID": user[0]._id.toString()
             }
             const accessToken = generateToken(userDetails)
             res.status(200).json({
