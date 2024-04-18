@@ -113,7 +113,7 @@ app.post('/add-expense', async function(request, response) {
 // })
 
 
-app.get('/get-items',async function(req,res){
+app.get('/get-expense',async function(req,res){
     try{
         const expense=await Expense.find();
         res.status(200).json(expense);
@@ -163,13 +163,13 @@ app.patch('/update-expense/:id',async function(req,res){
 })
 app.post('/add-user',async function(req,res){
     try{
-        const user=await User.find({"email":req.body.email});
+        const user=await User.find({"emailID":req.body.email});
         if(user.length===0)
         {
             User.create({
-             "email":req.body.email,
-            "password":req.body.pass,
-            "username":req.body.uname
+             "emailID":req.body.emailID,
+            "password":req.body.password,
+            "username":req.body.user_name
             })
             res.status(200).json({
             "status":"success",
@@ -193,7 +193,7 @@ app.post('/add-user',async function(req,res){
 })
 app.post('/valid-user',async function(req,res){
     try{
-        const user=await User.find({"email":req.body.email,"password":req.body.pass});
+        const user=await User.find({"emailID":req.body.email,"password":req.body.pass});
         if(user.length===0)
         {
            
