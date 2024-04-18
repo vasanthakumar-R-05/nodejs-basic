@@ -83,7 +83,7 @@ function authenticateToken(request, response, next) {
   const authHeader = request.headers.authorization
   const accessToken = authHeader && authHeader.split(' ')[1]
   if(accessToken) {
-      jwt.verify(accessToken, secretKey, (error, userDetails) => {
+      jwt.verify(accessToken, accessKey, (error, userDetails) => {
           if(error) {
               response.status(403).json({
                   "status": "failure",
