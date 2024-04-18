@@ -51,12 +51,18 @@ step 9: open git terminal type
 const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
 const cors=require('cors')
 const { Expense, User } = require('./schema.js')
 
 const app = express()
 app.use(bodyParser.json())
  app.use(cors());
+ const accessKey = 'hello'
+function generateToken(userDetails) {
+    return jwt.sign(userDetails, accessKey)
+}
+
 async function connectToDb() {
     try {
         await mongoose.connect('mongodb+srv://vasanth_node:vasanthakumar@cluster0.zoimsbd.mongodb.net/demo?retryWrites=true&w=majority&appName=Cluster0')
@@ -203,9 +209,16 @@ app.post('/valid-user',async function(req,res){
             })
         }
         else{
+            const userDetails = {
+                "userName": user[0].userName,
+                "emailId": user[0].emailID,
+                "userID": user[0]._id
+            }
+            const accessToken = generateToken(userDetails)
             res.status(200).json({
                 "status":"success",
-                "message":"user exisit"
+                "message":"user exisit",
+                "accesstoken":accessToken
             })
         }
     }
