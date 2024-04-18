@@ -167,9 +167,9 @@ app.post('/add-user',async function(req,res){
         if(user.length===0)
         {
             User.create({
-             "emailID":req.body.emailID,
-            "password":req.body.password,
-            "username":req.body.user_name
+             "emailID":req.body.email,
+            "password":req.body.pass,
+            "user_name":req.body.uname
             })
             res.status(200).json({
             "status":"success",
