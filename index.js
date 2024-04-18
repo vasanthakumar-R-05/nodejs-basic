@@ -161,3 +161,33 @@ app.patch('/update-expense/:id',async function(req,res){
         })
     }
 })
+app.post('/add-user',async function(req,res){
+    try{
+        const user=await User.find({"email":req.body.email});
+        if(user.length===0)
+        {
+            User.create({
+             "email":req.body.email,
+            "password":req.body.pass,
+            "username":req.body.uname
+            })
+            res.status(200).json({
+            "status":"success",
+            "message":"new user created"
+            })
+        }
+        else{
+            res.status(409).json({
+                "status":"fail",
+                "message":"y mail already exisi"
+            })
+        }
+    }
+    catch(error){
+        res.status(500).json({
+            "status":"fail",
+            "message":"user not created",
+            "error":error
+        })
+    }
+})
