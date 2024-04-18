@@ -103,12 +103,13 @@ function authenticateToken(request, response, next) {
 
 
 
-app.post("/add-expense",authenticateToken, async function (request, response) {
+app.post("/add-expense/:userID",authenticateToken, async function (request, response) {
   try {
     await Expense.create({
       amount: request.body.amount,
       category: request.body.category,
       date: request.body.date,
+      userID:req.params.userID
     });
     response.status(201).json({
       "status": "success",
