@@ -125,10 +125,10 @@ app.get('/get-items',async function(req,res){
         })
     }
 })
-app.get('/get-user',async function(req,res){
-        const user=await User.find();
-        res.status(200).json(user);
-})
+// app.get('/get-user',async function(req,res){
+//         const user=await User.find();
+//         res.status(200).json(user);
+// })
 app.delete('/delete-expense/:id',async function(req,res){
     try{
         await Expense.findByIdAndDelete(req.params.id);
