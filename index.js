@@ -125,10 +125,10 @@ app.get('/get-items',async function(req,res){
         })
     }
 })
-// app.get('/get-user',async function(req,res){
-//         const user=await User.find();
-//         res.status(200).json(user);
-// })
+app.get('/get-user',async function(req,res){
+        const user=await User.find();
+        res.status(200).json(user);
+})
 app.delete('/delete-expense/:id',async function(req,res){
     try{
         await Expense.findByIdAndDelete(req.params.id);
@@ -187,6 +187,32 @@ app.post('/add-user',async function(req,res){
         res.status(500).json({
             "status":"fail",
             "message":"user not created",
+            "error":error
+        })
+    }
+})
+app.post('/valid-user',async function(req,res){
+    try{
+        const user=await User.find({"email":req.body.email,"password":req.body.pass});
+        if(user.length===0)
+        {
+           
+            res.status(401).json({
+            "status":"fail",
+            "message":"create a new user"
+            })
+        }
+        else{
+            res.status(200).json({
+                "status":"success",
+                "message":"user exisit"
+            })
+        }
+    }
+    catch(error){
+        res.status(500).json({
+            "status":"fail",
+            "message":"authentication failed",
             "error":error
         })
     }
