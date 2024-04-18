@@ -143,9 +143,9 @@ app.post("/add-expense",authenticateToken, async function (request, response) {
 //     }
 // })
 
-app.get("/get-expense", authenticateToken,async function (req, res) {
+app.get("/get-expense/:userID", authenticateToken,async function (req, res) {
   try {
-    const expense = await Expense.find();
+    const expense = await Expense.find({"userID":req.params.userID});
     res.status(200).json(expense);
   } catch (error) {
     res.status(500).json({
@@ -199,6 +199,7 @@ app.post("/add-user", async function (req, res) {
         emailID: req.body.email,
         password: req.body.pass,
         user_name: req.body.uname,
+        userID:req.body.userID
       });
       const userDetails = {
         userName: user.userName,

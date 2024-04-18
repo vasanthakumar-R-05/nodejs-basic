@@ -25,6 +25,9 @@ const userDetailsSchema = new mongoose.Schema({
     },
     user_name: {
         type: String
+    },
+    userID:{
+        type: String
     }
 })
 
