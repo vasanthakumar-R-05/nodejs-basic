@@ -10,6 +10,9 @@ const expenseDetailsSchema = new mongoose.Schema({
     },
     date: {
         type: String
+    },
+    userID:{
+        type: String
     }
 })
 
@@ -24,9 +27,6 @@ const userDetailsSchema = new mongoose.Schema({
         type: String
     },
     user_name: {
-        type: String
-    },
-    userID:{
         type: String
     }
 })

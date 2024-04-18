@@ -111,14 +111,14 @@ app.post("/add-expense",authenticateToken, async function (request, response) {
       date: request.body.date,
     });
     response.status(201).json({
-      status: "success",
-      message: "entry successfully added",
+      "status": "success",
+      "message": "entry successfully added",
     });
   } catch (error) {
     response.status(500).json({
-      status: "failure",
-      message: "entry not created",
-      error: error,
+      "status": "failure",
+      "message": "entry not created",
+      "error": error,
     });
   }
 });
@@ -149,9 +149,9 @@ app.get("/get-expense/:userID", authenticateToken,async function (req, res) {
     res.status(200).json(expense);
   } catch (error) {
     res.status(500).json({
-      statu: "fail",
-      message: "not retrive",
-      error: error,
+      "status": "fail",
+      "message": "not retrive",
+      "error": error,
     });
   }
 });
@@ -163,13 +163,13 @@ app.delete("/delete-expense/:id", async function (req, res) {
   try {
     await Expense.findByIdAndDelete(req.params.id);
     res.status(200).json({
-      status: "success",
-      message: "entry deletes",
+      "status": "success",
+      "message": "entry deletes",
     });
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      error: error,
+      "status": "fail",
+      "error": error,
     });
   }
 });
@@ -181,13 +181,13 @@ app.patch("/update-expense/:id", authenticateToken,async function (req, res) {
       date: req.body.date,
     });
     res.status(200).json({
-      status: "pass",
-      message: "updated successfull",
+      "status": "pass",
+      "message": "updated successfull",
     });
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      error: error,
+      "status": "fail",
+      "error": error,
     });
   }
 });
@@ -208,21 +208,22 @@ app.post("/add-user", async function (req, res) {
       };
       const accessToken = generateToken(userDetails);
       res.status(201).json({
-        status: "success",
-        message: "new user created",
-        accesstoken: accessToken,
+        "status": "success",
+        "message": "new user created",
+        "accesstoken": accessToken,
+        "user":userDetails
       });
     } else {
       res.status(409).json({
-        status: "fail",
-        message: "y mail already exisi",
+        "status": "fail",
+       " message": "y mail already exisi",
       });
     }
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      message: "user not created",
-      error: error,
+      "status": "fail",
+      "message": "user not created",
+      "error": error,
     });
   }
 });
@@ -234,8 +235,8 @@ app.post("/valid-user", async function (req, res) {
     });
     if (user.length === 0) {
       res.status(401).json({
-        status: "fail",
-        message: "create a new user",
+        "status": "fail",
+        "message": "create a new user",
       });
     } else {
       const userDetails = {
@@ -245,16 +246,17 @@ app.post("/valid-user", async function (req, res) {
       };
       const accessToken = generateToken(userDetails);
       res.status(200).json({
-        status: "success",
-        message: "user exisit",
-        accesstoken: accessToken,
+        "status": "success",
+        "message": "user exisit",
+        "accesstoken": accessToken,
+        "user":userDetails
       });
     }
   } catch (error) {
     res.status(500).json({
-      status: "fail",
-      message: "authentication failed",
-      error: error,
+      "status": "fail",
+      "message": "authentication failed",
+      "error": error,
     });
   }
 });
