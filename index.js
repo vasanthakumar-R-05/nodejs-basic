@@ -51,24 +51,24 @@ step 9: open git terminal type
 const bodyParser = require("body-parser");
 const express = require("express");
 const mongoose = require("mongoose");
-const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const { Expense, User } = require("./schema.js");
-
+const expenseRoutes = require('./routes/expenseroutes.js')
+const userRoutes = require('./routes/userroutes.js')
+require('dotenv').config({path:'config.env'})
 const app = express();
 app.use(bodyParser.json());
 app.use(cors());
-const accessKey = "hello";
-function generateToken(userDetails) {
-  return jwt.sign(userDetails, accessKey);
-}
+
+app.use('/expense', expenseRoutes)
+app.use('/user', userRoutes)
+
 async function connectToDb() {
   try {
     await mongoose.connect(
-      "mongodb+srv://vasanth_node:vasanthakumar@cluster0.zoimsbd.mongodb.net/demo?retryWrites=true&w=majority&appName=Cluster0"
+      process.env.DB
     );
     console.log("DB connection established :)");
-    const port = process.env.PORT || 10000;
+    const port = process.env.PORT || 20000;
     app.listen(port, function () {
       console.log(`Listening on ${port}...`);
     });
@@ -78,186 +78,3 @@ async function connectToDb() {
   }
 }
 connectToDb();
-
-function authenticateToken(request, response, next) {
-  const authHeader = request.headers.authorization
-  const accessToken = authHeader && authHeader.split(' ')[1]
-  if(accessToken) {
-      jwt.verify(accessToken, accessKey, (error, userDetails) => {
-          if(error) {
-              response.status(403).json({
-                  "status": "failure",
-                  "message": "access denied"
-              })
-          } else {
-              next()
-          }
-      })
-  } else {
-      response.status(401).json({
-          "status": "failure",
-          "message": "access denied"
-      })
-  }
-}
-
-
-
-app.post("/add-expense/:userID",authenticateToken, async function (request, response) {
-  try {
-    await Expense.create({
-      amount: request.body.amount,
-      category: request.body.category,
-      date: request.body.date,
-      userID:req.params.userID
-    });
-    response.status(201).json({
-      "status": "success",
-      "message": "entry successfully added",
-    });
-  } catch (error) {
-    response.status(500).json({
-      "status": "failure",
-      "message": "entry not created",
-      "error": error,
-    });
-  }
-});
-
-// app.post('/add-user', async function(request, response) {
-//     try {
-//         await User.create({
-//             "emailID": request.body.email,
-//             "password": request.body.password,
-//             "user_name": request.body.name
-//         })
-//         response.status(201).json({
-//             "status" : "success",
-//             "message" : "entry successfully added"
-//         })
-//     } catch(error) {
-//         response.status(500).json({
-//             "status" : "failure",
-//             "message" : "entry not created",
-//             "error" : error
-//         })
-//     }
-// })
-
-app.get("/get-expense/:userID", authenticateToken,async function (req, res) {
-  try {
-    const expense = await Expense.find({"userID":req.params.userID});
-    res.status(200).json(expense);
-  } catch (error) {
-    res.status(500).json({
-      "status": "fail",
-      "message": "not retrive",
-      "error": error,
-    });
-  }
-});
-app.get("/get-user",authenticateToken, async function (req, res) {
-  const user = await User.find();
-  res.status(200).json(user);
-});
-app.delete("/delete-expense/:id", async function (req, res) {
-  try {
-    await Expense.findByIdAndDelete(req.params.id);
-    res.status(200).json({
-      "status": "success",
-      "message": "entry deletes",
-    });
-  } catch (error) {
-    res.status(500).json({
-      "status": "fail",
-      "error": error,
-    });
-  }
-});
-app.patch("/update-expense/:id", authenticateToken,async function (req, res) {
-  try {
-    await Expense.findByIdAndUpdate(req.params.id, {
-      amount: req.body.amount,
-      category: req.body.category,
-      date: req.body.date,
-    });
-    res.status(200).json({
-      "status": "pass",
-      "message": "updated successfull",
-    });
-  } catch (error) {
-    res.status(500).json({
-      "status": "fail",
-      "error": error,
-    });
-  }
-});
-app.post("/add-user", async function (req, res) {
-  try {
-    const user = await User.find({ emailID: req.body.email });
-    if (user.length === 0) {
-      const user = await User.create({
-        emailID: req.body.email,
-        password: req.body.pass,
-        user_name: req.body.uname,
-        userID:req.body.userID
-      });
-      const userDetails = {
-        userName: user.userName,
-        emailId: user.emailID,
-        userID: user._id.toString(),
-      };
-      const accessToken = generateToken(userDetails);
-      res.status(201).json({
-        "status": "success",
-        "message": "new user created",
-        "accesstoken": accessToken,
-        "user":userDetails
-      });
-    } else {
-      res.status(409).json({
-        "status": "fail",
-       " message": "y mail already exisi",
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      "status": "fail",
-      "message": "user not created",
-      "error": error,
-    });
-  }
-});
-app.post("/valid-user", async function (req, res) {
-  try {
-    const user = await User.find({
-      emailID: req.body.email,
-      password: req.body.pass,
-    });
-    if (user.length === 0) {
-      res.status(401).json({
-        "status": "fail",
-        "message": "create a new user",
-      });
-    } else {
-      const userDetails = {
-        userName: user[0].userName,
-        emailId: user[0].emailID,
-        userID: user[0]._id.toString(),
-      };
-      const accessToken = generateToken(userDetails);
-      res.status(200).json({
-        "status": "success",
-        "message": "user exisit",
-        "accesstoken": accessToken,
-        "user":userDetails
-      });
-    }
-  } catch (error) {
-    res.status(500).json({
-      "status": "fail",
-      "message": "authentication failed",
-      "error": error,
-    });
-  }
-});
